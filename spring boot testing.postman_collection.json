@@ -1,0 +1,154 @@
+{
+	"info": {
+		"_postman_id": "ab28c095-ef1b-428c-9267-3e3bf8ffcb90",
+		"name": "spring boot testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39964974"
+	},
+	"item": [
+		{
+			"name": "get all active user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/v1/users?max_records=10&offset=0",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"v1",
+						"users"
+					],
+					"query": [
+						{
+							"key": "max_records",
+							"value": "10"
+						},
+						{
+							"key": "offset",
+							"value": "0"
+						}
+					]
+				},
+				"description": "Additional test cases:  \n// Test Case 1: Default pagination  \nGET /v1/users\n\n// Test Case 2: Custom pagination - first page  \nGET /v1/users?max_records=2&offset=0\n\n// Test Case 3: Custom pagination - second page  \nGET /v1/users?max_records=2&offset=1\n\n// Test Case 4: Large page size  \nGET /v1/users?max_records=100&offset=0\n\n// Test Case 5: Get single record per page  \nGET /v1/users?max_records=1&offset=0"
+			},
+			"response": []
+		},
+		{
+			"name": "create new user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "// Test Case 1: Valid user with short SSN (will be padded)\r\n{\r\n    \"ssn\": \"2945\",\r\n    \"first_name\": \"Jon\",\r\n    \"family_name\": \"Snow\",\r\n    \"birth_date\": \"1990-01-02\"\r\n}\r\n\r\n// // Test Case 2: Valid user with middle name\r\n// {\r\n//     \"ssn\": \"123456\",\r\n//     \"first_name\": \"Herson\",\r\n//     \"middle_name\": \"Capri\",\r\n//     \"family_name\": \"Freire\",\r\n//     \"birth_date\": \"1995-05-15\"\r\n// }\r\n\r\n// // Test Case 3: Valid user with full 16-digit SSN\r\n// {\r\n//     \"ssn\": \"1234567890123456\",\r\n//     \"first_name\": \"Kakashi\",\r\n//     \"family_name\": \"Hatake\",\r\n//     \"birth_date\": \"1992-03-20\"\r\n// }\r\n\r\n// // Test Case 4: Valid user - minimum age\r\n// {\r\n//     \"ssn\": \"7890\",\r\n//     \"first_name\": \"Joshua\",\r\n//     \"family_name\": \"Graham\",\r\n//     \"birth_date\": \"2024-01-01\"\r\n// }\r\n\r\n// // Test Case 5: Valid user - maximum age (100 years)\r\n// {\r\n//     \"ssn\": \"5555\",\r\n//     \"first_name\": \"Clive\",\r\n//     \"family_name\": \"Lewis\",\r\n//     \"birth_date\": \"1925-10-05\"\r\n// }\r\n\r\n// // Test Case 6: Missing required field (first_name)\r\n// {\r\n//     \"ssn\": \"1111\",\r\n//     \"family_name\": \"Test\",\r\n//     \"birth_date\": \"1990-01-01\"\r\n// }\r\n\r\n// // Test Case 7: SSN with special characters (invalid)\r\n// {\r\n//     \"ssn\": \"abc-123\",\r\n//     \"first_name\": \"John\",\r\n//     \"family_name\": \"Doe\",\r\n//     \"birth_date\": \"1990-01-01\"\r\n// }\r\n\r\n// // Test Case 8: First name too short (less than 3 characters)\r\n// {\r\n//     \"ssn\": \"2222\",\r\n//     \"first_name\": \"Jo\",\r\n//     \"family_name\": \"Doe\",\r\n//     \"birth_date\": \"1990-01-01\"\r\n// }\r\n\r\n// // Test Case 9: First name with special characters\r\n// {\r\n//     \"ssn\": \"3333\",\r\n//     \"first_name\": \"John@123\",\r\n//     \"family_name\": \"Doe\",\r\n//     \"birth_date\": \"1990-01-01\"\r\n// }\r\n\r\n// // Test Case 10: Birth date older than 100 years\r\n// {\r\n//     \"ssn\": \"4444\",\r\n//     \"first_name\": \"Old\",\r\n//     \"family_name\": \"Person\",\r\n//     \"birth_date\": \"1920-01-01\"\r\n// }\r\n\r\n// // Test Case 11: Birth date in the future\r\n// {\r\n//     \"ssn\": \"6666\",\r\n//     \"first_name\": \"Future\",\r\n//     \"family_name\": \"Person\",\r\n//     \"birth_date\": \"2026-01-01\"\r\n// }\r\n\r\n// // Test Case 12: SSN too long (more than 16 digits)\r\n// {\r\n//     \"ssn\": \"12345678901234567890\",\r\n//     \"first_name\": \"John\",\r\n//     \"family_name\": \"Doe\",\r\n//     \"birth_date\": \"1990-01-01\"\r\n// }\r\n\r\n// // Test Case 13: Duplicate SSN (use same SSN from Test Case 1)\r\n// {\r\n//     \"ssn\": \"2945\",\r\n//     \"first_name\": \"Another\",\r\n//     \"family_name\": \"Person\",\r\n//     \"birth_date\": \"1990-01-01\"\r\n// }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/v1/users"
+			},
+			"response": []
+		},
+		{
+			"name": "get user by id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseURL}}/v1/users/1",
+				"description": "Additional test cases:\n\n// Test Case 1: Non-existent user ID\n\nGET /v1/users/999\n\n// Test Case 2: Deleted user ID (after soft delete)\n\nGET /v1/users/{deleted_user_id}EndFragment"
+			},
+			"response": []
+		},
+		{
+			"name": "update specific user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ssn\": \"4523535\", \r\n    \"first_name\": \"Jon\",\r\n    \"last_name\": \"asasa\",\r\n    \"birth_date\": \"1990-10-08\"\r\n}\r\n\r\n// // Test Case 2: Update with middle name\r\n// {\r\n//     \"first_name\": \"updatedHerson\",\r\n//     \"middle_name\": \"Newname\",\r\n//     \"family_name\": \"UpdateCapri\",\r\n//     \"birth_date\": \"1996-06-16\"\r\n// }\r\n\r\n// // Test Case 3: Update only first and last name\r\n// {\r\n//     \"first_name\": \"JustFirst\",\r\n//     \"family_name\": \"JustLast\",\r\n//     \"birth_date\": \"1990-01-01\"\r\n// }\r\n\r\n// // Test Case 4: First name too short\r\n// {\r\n//     \"first_name\": \"Ab\",\r\n//     \"family_name\": \"Test\",\r\n//     \"birth_date\": \"1990-01-01\"\r\n// }\r\n\r\n// // Test Case 5: Invalid characters in name\r\n// {\r\n//     \"first_name\": \"Test123\",\r\n//     \"family_name\": \"User\",\r\n//     \"birth_date\": \"1990-01-01\"\r\n// }\r\n\r\n// // Test Case 6: Birth date older than 100 years\r\n// {\r\n//     \"first_name\": \"John\",\r\n//     \"family_name\": \"Doe\",\r\n//     \"birth_date\": \"1920-01-01\"\r\n// }\r\n\r\n// // Test Case 7: Birth date in future\r\n// {\r\n//     \"first_name\": \"John\",\r\n//     \"family_name\": \"Doe\",\r\n//     \"birth_date\": \"2026-01-01\"\r\n// }\r\n\r\n// // Test Case 8: Missing required fields\r\n// {\r\n//     \"first_name\": \"John\"\r\n// }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/v1/users/1"
+			},
+			"response": []
+		},
+		{
+			"name": "update user settings",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"settings\": [\r\n        {\r\n            \"biometric_login\": \"false\"\r\n        },\r\n        {\r\n            \"push_notification\": \"true\"\r\n        },\r\n        {\r\n            \"sms_notification\": \"true\"\r\n        },\r\n        {\r\n            \"show_onboarding\": \"false\"\r\n        },\r\n        {\r\n            \"widget_order\": \"5,2,1,3,4\"\r\n        }\r\n    ]\r\n\r\n    // // Test Case 2: Update only some settings\r\n    // [\r\n    //     {\"biometric_login\": \"false\"},\r\n    //     {\"push_notification\": \"true\"}\r\n    // ]\r\n\r\n    // // Test Case 3: Update widget order\r\n    // [\r\n    //     {\"widget_order\": \"3,1,5,2,4\"}\r\n    // ]\r\n\r\n    // // Test Case 4: All settings false\r\n    // [\r\n    //     {\"biometric_login\": \"false\"},\r\n    //     {\"push_notification\": \"false\"},\r\n    //     {\"sms_notification\": \"false\"},\r\n    //     {\"show_onboarding\": \"false\"},\r\n    //     {\"widget_order\": \"1,2,3,4,5\"}\r\n    // ]\r\n\r\n    // // Test Case 5: Invalid setting key\r\n    // [\r\n    //     {\"invalid_key\": \"value\"}\r\n    // ]\r\n\r\n    // // Test Case 6: Invalid boolean value\r\n    // [\r\n    //     {\"biometric_login\": \"maybe\"}\r\n    // ]\r\n\r\n    // // Test Case 8: Invalid widget order pattern (invalid number)\r\n    // [\r\n    //     {\"widget_order\": \"1,2,3,4,6\"}\r\n    // ]\r\n\r\n    // // Test Case 10: Multiple key-value pairs in one map\r\n    // [\r\n    //     {\"biometric_login\": \"true\", \"push_notification\": \"false\"}\r\n    // ]\r\n\r\n    // // Test Case 12: Mix of valid and invalid\r\n    // [\r\n    //     {\"biometric_login\": \"true\"},\r\n    //     {\"invalid_key\": \"value\"},\r\n    //     {\"widget_order\": \"1,2,3\"}\r\n    // ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/v1/users/1/settings",
+				"description": "the update user settings have to use the \"settings\" parameter"
+			},
+			"response": []
+		},
+		{
+			"name": "soft delete user",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "{{baseURL}}/v1/users/1",
+				"description": "Additional test cases:\n\n// Test Case 3: Delete non-existent user\n\nDELETE /v1/users/999\n\n// Test Case 4: Delete already deleted user\n\nDELETE /v1/users/{already_deleted_id}EndFragment"
+			},
+			"response": []
+		},
+		{
+			"name": "reactivate user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": "{{baseURL}}/v1/users/1/refresh",
+				"description": "Additional tests:  \n// Test Case 2: Restore non-existent user\n\nPUT /v1/users/999/refresh\n\n// Test Case 3: Restore already active user\n\nPUT /v1/users/{active_user_id}/refreshEndFragment"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": ""
+		}
+	]
+}
