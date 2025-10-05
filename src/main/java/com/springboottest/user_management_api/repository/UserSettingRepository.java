@@ -25,19 +25,4 @@ public interface UserSettingRepository extends JpaRepository<UserSetting, Long> 
     @Query("SELECT us FROM UserSetting us WHERE us.user.id = :userId AND us.key = :key")
     Optional<UserSetting> findByUserIdAndKey(@Param("userId") Long userId,
                                              @Param("key") String key);
-
-    /*
-    * delete setting by user id
-    * */
-    @Modifying
-    @Query("DELETE FROM UserSetting us WHERE us.user.id = :userId")
-    void deleteByUserId(@Param("userId") Long userId);
-
-    /*
-    * Update setting value
-    * */
-    @Modifying
-    @Query("UPDATE UserSetting us SET us.value = :value WHERE us.user.id = :userId AND us.key = :key")
-    int updateSettingValue(@Param("userId") Long userId, @Param("key") String key, @Param(
-            "value") String value);
 }
