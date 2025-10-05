@@ -32,6 +32,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,8 +44,8 @@ public class UserServiceImplTest {
     @Mock
     private UserSettingService userSettingService;
 
-    @Mock
-    private EntityManager entityManager;
+//    @Mock
+//    private EntityManager entityManager;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -130,13 +131,15 @@ public class UserServiceImplTest {
     void createUser_shouldCreateUserWithPaddedSsn() {
         when(userRepository.existsBySsn("0000000000002945")).thenReturn(false);
         when(userRepository.save(any(User.class))).thenReturn(user);
-        when(userRepository.findActiveUserById(1L)).thenReturn(Optional.of(user));
-        doNothing().when(entityManager).flush();
-        doNothing().when(entityManager).clear();
 
         UserResponse response = userService.createUser(createRequest);
 
+        assertThat(response).isNotNull();
         assertThat(response.getUserData().getSsn()).isEqualTo("0000000000002945");
+        assertThat(response.getUserData().getFirstName()).isEqualTo("John");
+        assertThat(response.getUserData().getFamilyName()).isEqualTo("Doe");
+        assertThat(response.getUserSettings()).isNotEmpty();
+
         verify(userRepository).existsBySsn("0000000000002945");
         verify(userRepository).save(any(User.class));
         verify(userSettingService).createDefaultSettings(any(User.class));
@@ -147,18 +150,26 @@ public class UserServiceImplTest {
         when(userRepository.existsBySsn("0000000000002945")).thenReturn(true);
 
         assertThatThrownBy(() -> userService.createUser(createRequest))
-                .isInstanceOf(DuplicateResourceException.class);
-        verify(userRepository).existsBySsn("0000000000002945");
+                .isInstanceOf(DuplicateResourceException.class)
+                .hasMessageContaining("Record with unique value 0000000000002945 already exists");
+
+        verify(userRepository).existsBySsn(eq("0000000000002945"));
         verify(userRepository, never()).save(any(User.class));
+        verify(userSettingService, never()).createDefaultSettings(any(User.class));
     }
 
     @Test
     void createUser_shouldThrowException_whenAgeIsOlderThan100Years() {
         createRequest.setBirthDate(LocalDate.now().minusYears(101));
+        when(userRepository.existsBySsn("0000000000002945")).thenReturn(false);
 
         assertThatThrownBy(() -> userService.createUser(createRequest))
                 .isInstanceOf(InvalidRequestException.class)
                 .hasMessageContaining("Birth date cannot be older than 100 years");
+
+        verify(userRepository).existsBySsn(eq("0000000000002945"));
+        verify(userRepository, never()).save(any(User.class));
+        verify(userSettingService, never()).createDefaultSettings(any(User.class));
     }
 
     @Test

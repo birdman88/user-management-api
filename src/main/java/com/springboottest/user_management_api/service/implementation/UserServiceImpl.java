@@ -100,15 +100,7 @@ public class UserServiceImpl implements UserService {
         //create default settings for user
         userSettingService.createDefaultSettings(savedUser);
 
-        // Clear persistence context to force fresh fetch, flush all changes user and user settings
-        entityManager.flush();
-        entityManager.clear();
-
-        //fetch user with settings
-        User userWithSettings = userRepository.findActiveUserById(savedUser.getId())
-                .orElseThrow(() -> new ResourceNotFoundException(savedUser.getId()));
-
-        return ResponseUtil.mapToUserResponse(userWithSettings);
+        return ResponseUtil.mapToUserResponse(savedUser);
     }
 
     @Override

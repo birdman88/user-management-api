@@ -43,8 +43,7 @@ public class UserSettingServiceImpl implements UserSettingService {
                     .value(value)
                     .user(user)
                     .build();
-
-            userSettingRepository.save(setting);
+            user.addUserSetting(setting);
         });
 
         log.info("Created {} default settings for user id: {}", defaultSettings.size(), user.getId());

@@ -73,7 +73,7 @@ public class UserSettingServiceImplTest {
     void createDefaultSettings_shouldCreateAllFiveDefaultSettings() {
         userSettingService.createDefaultSettings(user);
 
-        verify(userSettingRepository, times(5)).save(any(UserSetting.class));
+        verify(userSettingRepository, times(0)).save(any(UserSetting.class));
     }
 
     @Test

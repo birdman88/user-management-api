@@ -55,7 +55,7 @@ public class GlobalExceptionHandler extends RuntimeException {
      * Handle InvalidRequestException (422)
      */
     @ExceptionHandler(InvalidRequestException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateResourceException(InvalidRequestException ex) {
+    public ResponseEntity<ErrorResponse> handleInvalidRequestException(InvalidRequestException ex) {
         log.error("Invalid resource: {}", ex.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.builder()
